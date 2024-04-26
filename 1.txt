@@ -1,0 +1,68 @@
+const fs = require("fs");
+const path = require("path");
+const mammoth = require("mammoth");
+const pdf = require("pdf-parse");
+
+const directorypath = process.argv[2];
+let fileId = 1;
+const postings = {};
+
+async function searchInFile(filepath) {
+  const ext = path.extname(filepath).toLowerCase();
+  try {
+    let result = null;
+    switch (ext) {
+      case ".txt":
+        result = await fs.promises.readFile(filepath, "utf-8");
+        break;
+      case ".pdf":
+        const pdfread = await fs.promises.readFile(filepath);
+        result = await pdf(pdfread);
+        break;
+      case ".docx":
+      case ".doc":
+        const docxResult = await mammoth.extractRawText({ path: filepath });
+        result = docxResult.value;
+        break;
+      default:
+        break;
+    }
+    if (result) {
+      const pathData = { [fileId]: filepath };
+      postings[fileId] = Object.keys(result.text || result);
+      fileId++;
+      return pathData;
+    }
+    return null;
+  } catch (e) {
+    console.error(`Error reading file ${filepath}: ${e.message}`);
+    return null;
+  }
+}
+
+async function searchInDirectory(directorypath) {
+  try {
+    const files = await fs.promises.readdir(directorypath);
+    for (const file of files) {
+      const filepath = path.join(directorypath, file);
+      const stats = await fs.promises.stat(filepath);
+      if (stats.isDirectory()) {
+        await searchInDirectory(filepath);
+      } else {
+        const result = await searchInFile(filepath);
+        if (result) {
+          const jsonData = JSON.stringify({ filepath: [result], postings }, null, 2);
+          fs.writeFile('./Data.json', jsonData , err => {
+            if (err) {
+              console.error(`Error writing JSON data to Data.json: ${err.message}`);
+            }
+          });
+        }
+      }
+    }
+  } catch (e) {
+    console.error(`Fail in search: ${e.message}`);
+  }
+}
+
+searchInDirectory(directorypath);

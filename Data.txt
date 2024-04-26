@@ -1,45 +1,38 @@
-F:\josajjsd\1\Pdf.pdf
-
-
-
-Pdf
-game
-sony
-==================================================
-F:\josajjsd\2\Laptop.docx
-
-Laptop
-
-Mahdi
-
-game
-
-
-==================================================
-F:\josajjsd\New Text Document.txt
-
-mahdi
-ali
-reza
-==================================================
-F:\josajjsd\1\Pdf.pdf
-
-
-Pdf
-game
-sony
-==================================================
-F:\josajjsd\2\Laptop.docx
-Laptop
-
-Mahdi
-
-game
-
-
-==================================================
-F:\josajjsd\New Text Document.txt
-mahdi
-ali
-reza
-==================================================
+{
+  "filepath": {
+    "1": {
+      "1": "F:\\josajjsd\\1\\Pdf.pdf"
+    },
+    "2": {
+      "2": "F:\\josajjsd\\2\\Laptop.docx"
+    },
+    "3": {
+      "3": "F:\\josajjsd\\New Text Document.txt"
+    }
+  },
+  "posting list": {
+    "pdf": [
+      1
+    ],
+    "game": [
+      1,
+      2
+    ],
+    "sony": [
+      1
+    ],
+    "laptop": [
+      2
+    ],
+    "mahdi": [
+      2,
+      3
+    ],
+    "ali": [
+      3
+    ],
+    "reza": [
+      3
+    ]
+  }
+}
