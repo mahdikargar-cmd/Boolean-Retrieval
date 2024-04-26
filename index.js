@@ -101,38 +101,100 @@ function not(arr, words) {
 
 // Function to search for condition and return matching files
 async function searchForCondition(condition) {
-  const words = extractWords(condition);
+  // Split the condition into individual words or operators
+  const tokens = condition.match(/\w+|&&|\|\||!/g);
 
-  // Find the files containing each word separately
-  const filesContainingEachWord = words.map(word => {
-    const lowerCaseWord = word.toLowerCase();
-    if (postings[lowerCaseWord]) {
-      return new Set(postings[lowerCaseWord]);
-    }
-    return new Set();
-  });
+  // Initialize an empty set to hold the resulting file IDs
+  let resultFiles = new Set();
 
-  // Find the intersection of files containing each word
-  let filesContainingBothWords = new Set();
-  for (let i = 0; i < filesContainingEachWord.length; i++) {
-    const files = filesContainingEachWord[i];
-    if (i === 0) {
-      // If it's the first word, add all files
-      files.forEach(file => filesContainingBothWords.add(file));
+  // Track if NOT operation is applied
+  let negateNext = false;
+
+  for (const token of tokens) {
+    if (token === "&&") {
+      // Skip AND operator, as it's already handled by intersection
+      const words = extractWords(condition);
+
+      // Find the files containing each word separately
+      const filesContainingEachWord = words.map(word => {
+        const lowerCaseWord = word.toLowerCase();
+        if (postings[lowerCaseWord]) {
+          return new Set(postings[lowerCaseWord]);
+        }
+        return new Set();
+      });
+    
+      // Find the intersection of files containing each word
+      let filesContainingBothWords = new Set();
+      for (let i = 0; i < filesContainingEachWord.length; i++) {
+        const files = filesContainingEachWord[i];
+        if (i === 0) {
+          // If it's the first word, add all files
+          files.forEach(file => filesContainingBothWords.add(file));
+        } else {
+          // Otherwise, keep only the files that exist in both sets
+          filesContainingBothWords = new Set([...filesContainingBothWords].filter(file => files.has(file)));
+        }
+      }
+    
+      // Convert the intersection set to an object with file IDs as keys
+      const filesObj = {};
+      filesContainingBothWords.forEach(file => {
+        filesObj[file] = fileData[file];
+      });
+    
+      return filesObj;
+
+
+
+
+
+
+    } else if (token === "||") {
+      // Handle OR operator
+      // Perform OR operation with the current result and the next condition's result
+      const nextCondition = tokens[tokens.indexOf(token) + 1];
+      const nextResult = await searchForCondition(nextCondition);
+      // Merge the new files with the current result
+      for (const file of Object.keys(nextResult)) {
+        resultFiles.add(file);
+      }
+      // Skip the next token, as it has already been processed
+      tokens.splice(tokens.indexOf(nextCondition), 1);
+    } else if (token === "!") {
+      // Handle NOT operator
+      // Mark the next token to be negated
+      negateNext = true;
     } else {
-      // Otherwise, keep only the files that exist in both sets
-      filesContainingBothWords = new Set([...filesContainingBothWords].filter(file => files.has(file)));
+      // Handle word/token
+      // Find the files containing this word
+      const lowerCaseWord = token.toLowerCase();
+      const files = postings[lowerCaseWord] || new Set();
+      // If NOT operation is applied, remove files containing this word from the result
+      if (negateNext) {
+        for (const file of files) {
+          resultFiles.delete(file);
+        }
+        // Reset the negate flag
+        negateNext = false;
+      } else {
+        // Otherwise, perform OR operation with the current result and the files containing this word
+        for (const file of files) {
+          resultFiles.add(file);
+        }
+      }
     }
   }
 
-  // Convert the intersection set to an object with file IDs as keys
+  // Convert the resulting set to an object with file IDs as keys
   const filesObj = {};
-  filesContainingBothWords.forEach(file => {
+  resultFiles.forEach(file => {
     filesObj[file] = fileData[file];
   });
 
   return filesObj;
 }
+
 
 
 // Function to read user input
