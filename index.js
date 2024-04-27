@@ -72,7 +72,6 @@ async function searchInDirectory(directorypath) {
     console.error(`Fail in search: ${e.message}`);
   }
 }
-
 // Function to extract words from text and convert them to lowercase
 function extractWords(text) {
   // Remove punctuation and convert to lowercase
@@ -81,7 +80,6 @@ function extractWords(text) {
   const words = cleanedText.split(/\s+/).filter(word => word.length > 0);
   return words;
 }
-
 // Function to perform NOT operation on a set
 function not(arr, words) {
   return Object.keys(arr).reduce((result, key) => {
@@ -98,7 +96,6 @@ function not(arr, words) {
     return result;
   }, {});
 }
-
 // Function to search for condition and return matching files
 async function searchForCondition(condition) {
   // Split the condition into individual words or operators
@@ -194,9 +191,6 @@ async function searchForCondition(condition) {
 
   return filesObj;
 }
-
-
-
 // Function to read user input
 async function getUserQuery() {
   const readline = require("readline").createInterface({
@@ -215,7 +209,6 @@ async function getUserQuery() {
     }
   });
 }
-
 // Function to evaluate the query and return matching files
 async function evaluateQuery(query) {
   const conditions = query.split(/\s*(?:(?<=\w)(?=\|\|)|(?<=\|\|)(?=\w)|(?<=\w)(?=&&)|(?<=&&)(?=\w)|(?<=\w)(?=AND)|(?<=AND)(?=\w)|(?<=\w)(?=OR)|(?<=OR)(?=\w)|(?<=\w)(?=\!)|(?<=\!)(?=\w))\s*/i);
@@ -265,13 +258,6 @@ async function evaluateQuery(query) {
 
   return result;
 }
-
-
-
-
-
-
-
 // Function to write data to file
 async function writeToFile() {
   try {
@@ -285,7 +271,6 @@ async function writeToFile() {
     console.error(`Error writing data to Data.txt: ${err.message}`);
   }
 }
-
 // Running the search operation in the directory and then getting user input for queries
 searchInDirectory(directorypath)
   .then(writeToFile)
