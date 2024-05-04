@@ -23,21 +23,21 @@ Usage
 After running the program, users can enter search queries and view the results.
 
 Query Format
-Search queries can include keywords, logical operators (&& , || , !), and combined expressions. Queries can be separated by spaces, OR, AND, or logical operators.
+Search queries can include keywords, logical operators (AND, OR, NOT), and combined expressions. Queries can be separated by spaces, OR, AND, or logical operators.
 
 Examples of Queries
-Search for a single word: apple
-Search for two words together: apple AND orange
-Search for one word or another: apple OR orange
-Search for a word with a negation operator: apple NOT orange
+<span style="color:green">Search for a single word: apple</span>
+<span style="color:green">Search for two words together: apple AND orange</span>
+<span style="color:green">Search for one word or another: apple OR orange</span>
+<span style="color:green">Search for a word with a negation operator: apple NOT orange</span>
 Program Structure
 Files and Directories
 The program searches through all text files, PDF files, and Docx/Doc files in a specified directory and its subdirectories.
 
 Key Functions
-searchInDirectory(directorypath): Searches files and subdirectories in a directory.
-searchInFile(filepath): Searches text content in a file.
-evaluateQuery(query): Evaluates search queries and returns matching results.
+<span style="color:green">searchInDirectory(directorypath): Searches files and subdirectories in a directory.</span>
+<span style="color:green">searchInFile(filepath): Searches text content in a file.</span>
+<span style="color:green">evaluateQuery(query): Evaluates search queries and returns matching results.</span>
 Results
 Search results include a list of files containing the searched phrases.
 
@@ -45,8 +45,7 @@ Errors and Issues
 If any issues occur during program execution, an appropriate error message is displayed.
 
 Authors
-This program is written by Mahdi Kargar.
+This program is written by <span style="color:green">[Your Name]</span>.
 
 Version
-Current Version: 1.0.0
-
+Current Version: <span style="color:green">1.0.0</span>
